@@ -1,6 +1,8 @@
 package com.example.delivery.activities
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,6 +10,8 @@ import android.util.Log
 import android.widget.Toast
 import com.example.delivery.R
 import com.example.delivery.activities.client.home.ClientHomeActivity
+import com.example.delivery.activities.delivery.home.DeliveryHomeActivity
+import com.example.delivery.activities.restaurant.home.RestaurantHomeActivity
 import com.example.delivery.models.ResponseHttp
 import com.example.delivery.models.User
 import com.example.delivery.providers.UsersProvider
@@ -78,6 +82,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun goToClientHome() {
         val i = Intent(this, ClientHomeActivity::class.java)
+        i.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK // Eliminar el historial de pantallas
+        startActivity(i)
+    }
+
+    private fun goToRestauranteHome() {
+        val i = Intent(this, RestaurantHomeActivity::class.java)
+        i.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK // Eliminar el historial de pantallas
+        startActivity(i)
+    }
+
+    private fun goToDeliveryHome() {
+        val i = Intent(this, DeliveryHomeActivity::class.java)
+        i.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK // Eliminar el historial de pantallas
+        startActivity(i)
+    }
+
+    private fun goToSelectRol() {
+        val i = Intent(this, SelectRolesActivity::class.java)
+        i.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK // Eliminar el historial de pantallas
         startActivity(i)
     }
 
@@ -86,6 +109,13 @@ class MainActivity : AppCompatActivity() {
         val gson = Gson()
         val user = gson.fromJson(data, User::class.java)
         sharedPref.save("user", user)
+
+        if(user.roles?.size!! > 1) {
+            goToSelectRol()
+        } else {
+            goToClientHome()
+        }
+
     }
 
     fun String.isEmailValid(): Boolean {
@@ -96,9 +126,23 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = SharedPref(this)
         val gson = Gson()
         if(!sharedPref.getData("user").isNullOrBlank()) {
+
             // Asegurarse de que el servicio no devuelva el password
             val user = gson.fromJson(sharedPref.getData("user"), User::class.java)
-            goToClientHome()
+
+            if(!sharedPref.getData("rol").isNullOrBlank()){
+                val rol = sharedPref.getData("rol")?.replace("\"", "")
+                if(rol == "RESTAURANTE"){
+                    goToRestauranteHome()
+                } else if(rol == "CLIENTE"){
+                    goToClientHome()
+                } else if(rol == "REPARTIDOR"){
+                    goToDeliveryHome()
+                }
+            } else {
+                goToClientHome()
+            }
+
         }
     }
 

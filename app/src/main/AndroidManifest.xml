@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.delivery">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Delivery"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".activities.delivery.home.DeliveryHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.restaurant.home.RestaurantHomeActivity"
+            android:exported="false" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,12 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.RegisterActivity">
-
-        </activity>
-
-
+        <activity android:name=".activities.RegisterActivity" />
     </application>
 
 </manifest>
