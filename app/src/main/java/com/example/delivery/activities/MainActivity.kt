@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
                     if(response.body()?.isSuccess == true){
                         Toast.makeText(this@MainActivity, response.body()?.message, Toast.LENGTH_LONG).show()
                         saveUserInSession(response.body()?.data.toString())
-                        goToClientHome()
                     } else {
                         Toast.makeText(this@MainActivity, "Los datos no son correctos", Toast.LENGTH_LONG).show()
                     }

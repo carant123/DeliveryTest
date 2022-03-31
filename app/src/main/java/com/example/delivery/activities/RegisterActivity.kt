@@ -6,9 +6,12 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.delivery.R
+import com.example.delivery.activities.client.home.ClientHomeActivity
 import com.example.delivery.models.ResponseHttp
 import com.example.delivery.models.User
 import com.example.delivery.providers.UsersProvider
+import com.example.delivery.utils.SharedPref
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_register.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,7 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         iv_go_to_login.setOnClickListener {
-            goToLogin()
+            goToClientHome()
         }
 
         bt_registrarse.setOnClickListener {
@@ -55,6 +58,11 @@ class RegisterActivity : AppCompatActivity() {
                     call: Call<ResponseHttp>,
                     response: Response<ResponseHttp>
                 ) {
+                    if(response.body()?.isSuccess == true) {
+                        saveUserInSession(response.body()?.data.toString())
+                        goToClientHome()
+                    }
+
                     Toast.makeText(this@RegisterActivity, response.body()?.message, Toast.LENGTH_LONG).show()
                 }
 
@@ -70,9 +78,17 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    private fun goToLogin() {
-        var intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+    private fun goToClientHome() {
+        val i = Intent(this, SaveImageActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Eliminar el historial de pantallas
+        startActivity(i)
+    }
+
+    private fun saveUserInSession(data: String) {
+        val sharedPref = SharedPref(this)
+        val gson = Gson()
+        val user = gson.fromJson(data, User::class.java)
+        sharedPref.save("user", user)
     }
 
     fun String.isEmailValid(): Boolean {
