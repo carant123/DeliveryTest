@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_home"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/item_category"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Categorias"/>
+
+    <item
+        android:id="@+id/item_product"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Productos"/>
+
+    <item
+        android:id="@+id/item_profile"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Perfil"/>
+
+
+</menu>
