@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class RegisterActivity : AppCompatActivity() {
 
-    var usersProvider = UsersProvider()
+    var usersProvider = UsersProvider(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

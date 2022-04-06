@@ -25,7 +25,7 @@ import java.io.File
 class SaveImageActivity : AppCompatActivity() {
 
     private var imageFile: File? = null
-    var usersProvider = UsersProvider()
+    var usersProvider: UsersProvider? = null
     var user: User? = null
     var sharedPref: SharedPref? = null
 
@@ -35,6 +35,7 @@ class SaveImageActivity : AppCompatActivity() {
 
         sharedPref = SharedPref(this)
         getUserFromSession()
+        usersProvider = UsersProvider(user?.session_token)
 
         circleImageUser.setOnClickListener { selectImage() }
         bt_next?.setOnClickListener { goToClientHome() }
@@ -44,7 +45,7 @@ class SaveImageActivity : AppCompatActivity() {
     private fun saveImage() {
 
         if(imageFile != null && user != null){
-            usersProvider.update(imageFile!!, user!!)?.enqueue(object: Callback<ResponseHttp> {
+            usersProvider?.update(imageFile!!, user!!)?.enqueue(object: Callback<ResponseHttp> {
                 override fun onResponse(call: Call<ResponseHttp>, response: Response<ResponseHttp>) {
 
                     Log.d("TAG", "RESPONSE: $response")
