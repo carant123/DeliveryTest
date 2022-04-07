@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +38,9 @@ class RestaurantCategoryFragment : Fragment() {
 
     var categoriesProvider: CategoriesProvider? = null
 
+    var ivCategory: ImageView? = null
+    var btCreateCategory: Button? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,8 +49,11 @@ class RestaurantCategoryFragment : Fragment() {
 
         sharedPref = SharedPref(requireActivity())
 
-        iv_category?.setOnClickListener { selectImage() }
-        bt_create_category?.setOnClickListener { createCategory() }
+        ivCategory = myView?.findViewById(R.id.iv_category)
+        ivCategory?.setOnClickListener { selectImage() }
+
+        btCreateCategory = myView?.findViewById(R.id.bt_create_category)
+        btCreateCategory?.setOnClickListener { createCategory() }
 
         getUserFromSession()
         categoriesProvider = CategoriesProvider(user?.session_token!!)
