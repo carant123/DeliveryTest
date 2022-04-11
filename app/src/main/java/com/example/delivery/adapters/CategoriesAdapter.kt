@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.delivery.R
 import com.example.delivery.activities.client.home.ClientHomeActivity
+import com.example.delivery.activities.client.products.list.ClientProductsListActivity
 import com.example.delivery.activities.delivery.home.DeliveryHomeActivity
 import com.example.delivery.activities.restaurant.home.RestaurantHomeActivity
 import com.example.delivery.models.Category
@@ -31,18 +32,20 @@ class CategoriesAdapter(val context: Activity, val categories: ArrayList<Categor
     }
 
     override fun onBindViewHolder(holder: CategoriesViewHolder, position: Int) {
-        val rol = categories[position]
-        holder.textViewCategory.text = rol.name
-        Glide.with(context).load(rol.image).into(holder.imageViewCategory)
+        val category = categories[position]
+        holder.textViewCategory.text = category.name
+        Glide.with(context).load(category.image).into(holder.imageViewCategory)
+
         holder.itemView.setOnClickListener {
-            // goToRol(rol)
+            goToProducts(category)
         }
     }
 
-//    private fun goToRol(rol: Rol) {
-//        val i = Intent(context, DeliveryHomeActivity::class.java)
-//        context.startActivity(i)
-//    }
+    private fun goToProducts(category: Category) {
+        val i = Intent(context, ClientProductsListActivity::class.java)
+        i.putExtra("idCategory", category.id)
+        context.startActivity(i)
+    }
 
     class CategoriesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewCategory: TextView

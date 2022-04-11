@@ -1,8 +1,10 @@
 package com.example.delivery.fragments.client
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.delivery.R
+import com.example.delivery.activities.client.shopping_bag.ClientShoppingBagActivity
 import com.example.delivery.adapters.CategoriesAdapter
 import com.example.delivery.models.Category
 import com.example.delivery.models.User
@@ -26,8 +29,8 @@ class ClientCategoriesFragment : Fragment() {
 
     var myView: View? = null
     var recyclerViewCategory: RecyclerView? = null
-    var categoriesProvider: CategoriesProvider? = null
     var adapter: CategoriesAdapter? = null
+    var categoriesProvider: CategoriesProvider? = null
     var user: User? = null
     var sharedPref: SharedPref? = null
     var categories = ArrayList<Category>()
@@ -39,6 +42,8 @@ class ClientCategoriesFragment : Fragment() {
     ): View? {
 
         myView = inflater.inflate(R.layout.fragment_client_categories, container, false)
+
+        setHasOptionsMenu(true)
 
         toolbar = myView?.findViewById(R.id.toolbar)
         toolbar?.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
@@ -54,8 +59,24 @@ class ClientCategoriesFragment : Fragment() {
 
         categoriesProvider = CategoriesProvider(user?.session_token!!)
 
+        getCategories()
+
         return myView
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if(item.itemId == R.id.item_shoping_bag) {
+            goToShoopingBag()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun goToShoopingBag() {
+        val i = Intent(requireContext(), ClientShoppingBagActivity::class.java)
+        startActivity(i)
     }
 
     private fun getCategories() {
