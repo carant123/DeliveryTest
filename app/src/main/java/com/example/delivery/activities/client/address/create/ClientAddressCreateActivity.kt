@@ -9,13 +9,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.example.delivery.R
 import com.example.delivery.activities.client.address.map.ClientAddressMapActivity
+import com.example.delivery.models.Address
+import com.example.delivery.models.ResponseHttp
+import com.example.delivery.models.User
+import com.example.delivery.providers.AddressProvider
+import com.example.delivery.utils.SharedPref
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.action_bar.*
 import kotlinx.android.synthetic.main.activity_client_address_create.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ClientAddressCreateActivity : AppCompatActivity() {
 
     var addressLat = 0.0
     var addressLng = 0.0
+
+    var addressProvider: AddressProvider? = null
+    var sharedPref: SharedPref? = null
+    var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +39,22 @@ class ClientAddressCreateActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        sharedPref = SharedPref(this)
+        getUserFromSession()
+        addressProvider = AddressProvider(user?.session_token!!)
+
         et_ref_point?.setOnClickListener { goToAddressMap() }
+        bt_create_address?.setOnClickListener { createAddress() }
+
+    }
+
+    private fun getUserFromSession() {
+        val gson = Gson()
+
+        if(!sharedPref?.getData("user").isNullOrBlank()) {
+            // Asegurarse de que el servicio no devuelva el password
+            user = gson.fromJson(sharedPref?.getData("user"), User::class.java)
+        }
 
     }
 
@@ -35,8 +63,35 @@ class ClientAddressCreateActivity : AppCompatActivity() {
         val neighborhood = et_neighborhood?.text.toString()
 
         if(isValidForm(address,neighborhood)) {
+            val addressModel = Address(
+                    address = address,
+                    neighborhood = neighborhood,
+                    idUser = user?.id!!,
+                    lat = addressLat,
+                    lng = addressLng
+            )
+
+            addressProvider?.create(addressModel)?.enqueue(object: Callback<ResponseHttp> {
+                override fun onResponse(call: Call<ResponseHttp>, response: Response<ResponseHttp>) {
+                    if(response.body() != null) {
+                        Toast.makeText(this@ClientAddressCreateActivity, response.body()?.message, Toast.LENGTH_LONG).show()
+                        goToAddressList()
+                    } else {
+                        Toast.makeText(this@ClientAddressCreateActivity, "Ocurrio un error en la peticion", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseHttp>, t: Throwable) {
+                    Toast.makeText(this@ClientAddressCreateActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                }
+            })
 
         }
+    }
+
+    private fun goToAddressList() {
+        val i = Intent(this, ClientAddressCreateActivity::class.java)
+        startActivity(i)
     }
 
     private fun isValidForm(address: String, neighborhood: String): Boolean {

@@ -19,10 +19,10 @@ import retrofit2.Response
 class ClientProductsListActivity : AppCompatActivity() {
 
     var adapter: ProductsAdapter? = null
-    var user: User? = null
     var productsProvider: ProductsProvider? = null
     var products: ArrayList<Product> = ArrayList()
     var sharedPref: SharedPref? = null
+    var user: User? = null
 
     var idCategory: String? = null
 
