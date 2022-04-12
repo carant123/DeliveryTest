@@ -10,7 +10,6 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -22,7 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Delivery"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.client.address.map.ClientAddressMapActivity"></activity>
+        <activity
+            android:name=".activities.client.payments.form.ClientPaymentFormActivity"
+            android:exported="false" />
+        <activity android:name=".activities.client.address.map.ClientAddressMapActivity" />
         <activity
             android:name=".activities.client.address.create.ClientAddressCreateActivity"
             android:exported="true"
